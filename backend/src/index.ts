@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 4000;
 
 const start = async () => {
   await connectDB();
-  app.listen(PORT, () => console.log(`🚀 FeedPulse API running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`FeedPulse API running on port ${PORT}`));
 };
 
 start();

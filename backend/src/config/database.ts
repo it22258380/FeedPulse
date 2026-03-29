@@ -10,12 +10,12 @@ const connectDB = async (): Promise<void> => {
       socketTimeoutMS: 45000,
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
 
-    mongoose.connection.on('error', (err) => console.error('❌ MongoDB error:', err));
-    mongoose.connection.on('disconnected', () => console.warn('⚠️  MongoDB disconnected'));
+    mongoose.connection.on('error', (err) => console.error('MongoDB error:', err));
+    mongoose.connection.on('disconnected', () => console.warn('MongoDB disconnected'));
   } catch (error) {
-    console.error('❌ Failed to connect to MongoDB:', error);
+    console.error('Failed to connect to MongoDB:', error);
     process.exit(1);
   }
 };
