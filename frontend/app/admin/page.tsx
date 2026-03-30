@@ -110,7 +110,7 @@ export default function AdminDashboard() {
           </div>
 
           <Card className="bg-surface-800/30 border-primary-500/20 shadow-[0_4px_30px_rgba(139,92,246,0.05)] relative overflow-hidden">
-            <div className="absolute right-0 top-0 w-[300px] h-[300px] bg-primary-500/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute right-0 top-0 w-75 h-75 bg-primary-500/10 blur-[80px] rounded-full pointer-events-none" />
             <CardHeader>
               <div className="flex items-center gap-2">
                 <div className="bg-primary-500/20 p-2 rounded-lg border border-primary-500/30">

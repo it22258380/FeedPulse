@@ -29,7 +29,7 @@ export default function Home() {
           
           <div className="flex flex-col gap-6 text-center md:text-left">
             <BadgeWrapper>Help Us Improve</BadgeWrapper>
-            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
+            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-br from-white to-slate-400">
               We&apos;re listening to your feedback.
             </h1>
             <p className="text-lg text-slate-400 leading-relaxed max-w-lg mx-auto md:mx-0">
@@ -38,7 +38,7 @@ export default function Home() {
           </div>
 
           <div className="rounded-2xl border border-white/5 bg-surface-800/60 backdrop-blur-2xl p-8 shadow-2xl relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-b from-white/5 to-transparent rounded-2xl pointer-events-none" />
             <div className="relative z-10">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 Submit Feedback

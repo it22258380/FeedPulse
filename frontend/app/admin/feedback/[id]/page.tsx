@@ -175,7 +175,7 @@ export default function FeedbackDetailView() {
           </Card>
 
           <Card className="bg-primary-500/5 border-primary-500/20 relative overflow-hidden">
-            <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-500/10 blur-[40px] rounded-full pointer-events-none" />
+            <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-500/10 blur-2xl rounded-full pointer-events-none" />
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg flex items-center gap-2">
