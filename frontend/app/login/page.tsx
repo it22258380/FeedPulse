@@ -21,13 +21,20 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = await fetchApi<{ token: string; user: any }>("/api/auth/login", {
+      const response = await fetchApi<{
+        success: boolean;
+        data: {
+          token: string;
+          user: { id: string; email: string; role: string };
+        };
+        message: string;
+      }>("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
+
       toast.success("Login successful.");
-      login(data.token, data.user);
-      // Navigation handled inside useAuth.login
+      login(response.data.token, response.data.user);
     } catch (err: any) {
       toast.error(err.message || "Invalid credentials.");
     } finally {
@@ -52,13 +59,19 @@ export default function LoginPage() {
             <div className="bg-primary-500/10 p-3 rounded-full border border-primary-500/20 mb-2 shadow-[0_0_15px_rgba(139,92,246,0.2)]">
               <Lock className="w-6 h-6 text-primary-400" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Admin Login</h1>
-            <p className="text-sm text-slate-400">Enter your credentials to manage feedback</p>
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              Admin Login
+            </h1>
+            <p className="text-sm text-slate-400">
+              Enter your credentials to manage feedback
+            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Email</label>
+              <label className="text-sm font-medium text-slate-300">
+                Email
+              </label>
               <Input
                 type="email"
                 required
@@ -69,7 +82,9 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Password</label>
+              <label className="text-sm font-medium text-slate-300">
+                Password
+              </label>
               <Input
                 type="password"
                 required
@@ -80,8 +95,16 @@ export default function LoginPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full h-12 mt-4" disabled={loading}>
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
+            <Button
+              type="submit"
+              className="w-full h-12 mt-4"
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
         </div>

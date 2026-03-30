@@ -1,42 +1,22 @@
+// app/admin/layout.tsx
 "use client";
-
-import { Sidebar } from "@/components/admin/Sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { useEffect, ReactNode } from "react";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.replace("/login");
+      router.push("/login");
     }
-  }, [isAuthenticated, loading, router]);
+  }, [loading, isAuthenticated]);
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
-      </div>
-    );
-  }
-
+  // Don't render anything (or render a spinner) while loading
+  if (loading) return <div>Loading...</div>;
   if (!isAuthenticated) return null;
 
-  return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto px-8 py-8 relative">
-        <div className="absolute top-0 right-0 w-1/3 h-[50%] bg-primary-600/5 blur-[100px] rounded-full mix-blend-screen pointer-events-none" />
-        <div className="relative z-10 max-w-7xl mx-auto">{children}</div>
-      </main>
-    </div>
-  );
+  return <>{children}</>;
 }

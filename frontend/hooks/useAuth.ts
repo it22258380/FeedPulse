@@ -12,12 +12,15 @@ interface User {
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [hasToken, setHasToken] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     async function loadUser() {
       const token = localStorage.getItem("auth_token");
+      setHasToken(!!token);
       if (!token) {
         setLoading(false);
         return;
@@ -29,9 +32,20 @@ export function useAuth() {
           { requireAuth: true }
         );
         setUser({ id: data._id, email: data.email, role: data.role });
+        setUnauthorized(false);
       } catch (error) {
-        localStorage.removeItem("auth_token");
-        setUser(null);
+        const message = (error as Error).message || "";
+        // Only clear token on genuine auth failures; keep it for transient errors
+        if (
+          message.toLowerCase().includes("not authenticated") ||
+          message.toLowerCase().includes("authentication required") ||
+          message.includes("401")
+        ) {
+          localStorage.removeItem("auth_token");
+          setHasToken(false);
+          setUser(null);
+          setUnauthorized(true);
+        }
       } finally {
         setLoading(false);
       }
@@ -39,17 +53,20 @@ export function useAuth() {
     loadUser();
   }, []);
 
-  const login = (token: string, userData: User) => {
-    localStorage.setItem("auth_token", token);
-    setUser(userData);
-    router.push("/admin/feedback");
-  };
+const login = (token: string, userData: { id: string; email: string; role: string }) => {
+  localStorage.setItem("auth_token", token);
+  setHasToken(true);
+  setUser({ id: userData.id, email: userData.email, role: userData.role });
+  router.push("/admin");
+};
 
   const logout = () => {
     localStorage.removeItem("auth_token");
+    setHasToken(false);
     setUser(null);
+    setUnauthorized(false);
     router.push("/login");
   };
 
-  return { user, loading, login, logout, isAuthenticated: !!user };
+  return { user, loading, login, logout, hasToken, unauthorized, isAuthenticated: !!user };
 }

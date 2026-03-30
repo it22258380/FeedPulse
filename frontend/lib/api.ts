@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface FetchOptions extends RequestInit {
   requireAuth?: boolean;
@@ -22,7 +22,6 @@ export async function fetchApi<T>(path: string, options: FetchOptions = {}): Pro
       // Avoid making an auth request if we already know the token is missing/invalid
       if (!hasToken) {
         localStorage.removeItem("auth_token");
-        window.location.href = "/login";
         throw new Error("Not authenticated");
       }
 
@@ -39,14 +38,6 @@ export async function fetchApi<T>(path: string, options: FetchOptions = {}): Pro
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {
     data = await response.json();
-  }
-
-  // Auto-clean invalid token so subsequent requests don't keep failing
-  if (response.status === 401 && typeof window !== "undefined") {
-    localStorage.removeItem("auth_token");
-    if (requireAuth) {
-      window.location.href = "/login";
-    }
   }
 
   if (!response.ok) {
