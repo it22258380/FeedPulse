@@ -27,6 +27,7 @@ export default function LoginPage() {
       });
       toast.success("Login successful.");
       login(data.token, data.user);
+      // Navigation handled inside useAuth.login
     } catch (err: any) {
       toast.error(err.message || "Invalid credentials.");
     } finally {

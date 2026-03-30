@@ -42,7 +42,7 @@ export function useAuth() {
   const login = (token: string, userData: User) => {
     localStorage.setItem("auth_token", token);
     setUser(userData);
-    router.push("/admin");
+    router.push("/admin/feedback");
   };
 
   const logout = () => {
