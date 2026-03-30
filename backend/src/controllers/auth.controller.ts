@@ -3,11 +3,13 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
 import { sendSuccess, sendError } from '../utils/response';
 
+// Generate JWT token
 const generateToken = (id: string, email: string, role: string): string =>
   jwt.sign({ id, email, role }, process.env.JWT_SECRET || 'fallback_secret', {
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   } as jwt.SignOptions);
 
+  //login
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
@@ -23,7 +25,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     sendError(res, 'Login failed. Please try again.', 500);
   }
 };
-
+//get user profile
 export const getProfile = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.user) { sendError(res, 'Not authenticated', 401); return; }

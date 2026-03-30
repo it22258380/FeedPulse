@@ -9,7 +9,7 @@ declare global {
     interface Request { user?: JwtPayload; }
   }
 }
-
+// Middleware to authenticate JWT token and attach user info to request
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -26,7 +26,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     else sendError(res, 'Invalid token. Please log in again.', 401);
   }
 };
-
+// Middleware to check if user has admin role
 export const requireAdmin = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.user || req.user.role !== 'admin') {
     sendError(res, 'Admin access required.', 403);

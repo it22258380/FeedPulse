@@ -3,6 +3,7 @@ import Feedback from '../models/feedback.model';
 import { analyzeFeedback, generateWeeklySummary } from '../services/gemini.service';
 import { sendSuccess, sendError } from '../utils/response';
 
+//submit feedback
 export const submitFeedback = async (req: Request, res: Response): Promise<void> => {
   try {
     const { title, description, category, submitterName, submitterEmail } = req.body;
@@ -27,9 +28,9 @@ export const submitFeedback = async (req: Request, res: Response): Promise<void>
           ai_tags: analysis.tags,
           ai_processed: true,
         });
-        console.log(`✅ AI done for: ${feedback._id}`);
+        console.log(`AI done for: ${feedback._id}`);
       } catch (err) {
-        console.error(`⚠️  AI failed for ${feedback._id}:`, err);
+        console.error(`AI failed for ${feedback._id}:`, err);
       }
     })();
   } catch (error: unknown) {
@@ -38,21 +39,23 @@ export const submitFeedback = async (req: Request, res: Response): Promise<void>
   }
 };
 
+//get all feedback by admin
 export const getAllFeedback = async (req: Request, res: Response): Promise<void> => {
   try {
+    //pagination
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(100, parseInt(req.query.limit as string) || 10);
     const skip = (page - 1) * limit;
-
+    //filtering
     const filter: Record<string, unknown> = {};
     if (req.query.category) filter.category = req.query.category;
     if (req.query.status) filter.status = req.query.status;
     if (req.query.search) filter.$text = { $search: req.query.search };
-
+    //sorting
     let sortOption: Record<string, 1 | -1> = { createdAt: -1 };
     if (req.query.sort === 'priority') sortOption = { ai_priority: -1 };
     else if (req.query.sort === 'sentiment') sortOption = { ai_sentiment: 1, createdAt: -1 };
-
+    
     const [feedbackList, total] = await Promise.all([
       Feedback.find(filter).sort(sortOption).skip(skip).limit(limit),
       Feedback.countDocuments(filter),
@@ -65,7 +68,7 @@ export const getAllFeedback = async (req: Request, res: Response): Promise<void>
     sendError(res, 'Failed to retrieve feedback', 500);
   }
 };
-
+//get feedback stats for dashboard
 export const getFeedbackStats = async (_req: Request, res: Response): Promise<void> => {
   try {
     const [total, openItems, priorityAgg, tagAgg] = await Promise.all([
@@ -84,7 +87,7 @@ export const getFeedbackStats = async (_req: Request, res: Response): Promise<vo
     sendError(res, 'Failed to retrieve stats', 500);
   }
 };
-
+//get weekly AI summary of recent feedback for admin dashboard
 export const getAISummary = async (_req: Request, res: Response): Promise<void> => {
   try {
     const sevenDaysAgo = new Date();
@@ -98,7 +101,7 @@ export const getAISummary = async (_req: Request, res: Response): Promise<void> 
     sendError(res, 'Failed to generate AI summary', 500);
   }
 };
-
+//get feedback by id for admin
 export const getFeedbackById = async (req: Request, res: Response): Promise<void> => {
   try {
     const feedback = await Feedback.findById(req.params.id);
@@ -108,7 +111,7 @@ export const getFeedbackById = async (req: Request, res: Response): Promise<void
     sendError(res, 'Failed to retrieve feedback', 500);
   }
 };
-
+//update feedback status by admin
 export const updateFeedbackStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const feedback = await Feedback.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true, runValidators: true });
@@ -118,7 +121,7 @@ export const updateFeedbackStatus = async (req: Request, res: Response): Promise
     sendError(res, 'Failed to update status', 500);
   }
 };
-
+//reanalyze feedback with AI by admin
 export const reanalyzeFeedback = async (req: Request, res: Response): Promise<void> => {
   try {
     const feedback = await Feedback.findById(req.params.id);
@@ -128,16 +131,16 @@ export const reanalyzeFeedback = async (req: Request, res: Response): Promise<vo
       try {
         const analysis = await analyzeFeedback(feedback.title, feedback.description);
         await Feedback.findByIdAndUpdate(feedback._id, { ai_category: analysis.category, ai_sentiment: analysis.sentiment, ai_priority: analysis.priority_score, ai_summary: analysis.summary, ai_tags: analysis.tags, ai_processed: true });
-        console.log(`✅ Re-analysis done: ${feedback._id}`);
+        console.log(`Re-analysis done: ${feedback._id}`);
       } catch (err) {
-        console.error(`❌ Re-analysis failed ${feedback._id}:`, err);
+        console.error(`Re-analysis failed ${feedback._id}:`, err);
       }
     })();
   } catch {
     sendError(res, 'Failed to trigger re-analysis', 500);
   }
 };
-
+//delete feedback by admin
 export const deleteFeedback = async (req: Request, res: Response): Promise<void> => {
   try {
     const feedback = await Feedback.findByIdAndDelete(req.params.id);

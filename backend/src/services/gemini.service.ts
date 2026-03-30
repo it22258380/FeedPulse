@@ -14,16 +14,15 @@ export interface WeeklySummary {
   key_insight: string;
   generated_at: string;
 }
-
+// Helper function to create Gemini client
 const getClient = () => {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error('GEMINI_API_KEY is not configured');
+  if (!apiKey) throw new Error('GEMINI_API_KEY is not configured');//check if Gemini API key 
   return new GoogleGenerativeAI(apiKey);
 };
-
+// Analyze feedback using Gemini AI
 export const analyzeFeedback = async (title: string, description: string): Promise<GeminiAnalysis> => {
   const model = getClient().getGenerativeModel({ model: 'gemini-1.5-flash' });
-
   const prompt = `Analyse this product feedback. Return ONLY valid JSON with these exact fields, no markdown, no explanation:
 {
   "category": "Bug | Feature Request | Improvement | Other",
