@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* 
+  Custom Theme Tokens for feedPulse
+  Dark Purple / Obsidian Theme 
+*/
+@theme {
+  --color-background: #0a0a0b; 
+  --color-surface-900: #121216;
+  --color-surface-800: #1a1a20;
+  --color-surface-700: #272730;
+
+  --color-primary-500: #7c3aed; /* Violet 600 equivalent */
+  --color-primary-600: #6d28d9;
+  --color-primary-400: #8b5cf6;
+  
+  --color-accent-400: #c084fc; /* Fuchsia/Purple mix for neon accents */
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+@layer base {
+  :root {
+    --background: #0f172a; /* Slate 900 base */
+    --foreground: #f8fafc; /* Slate 50 text */
+  }
+  
+  html, body {
+    @apply antialiased scroll-smooth;
+    background-color: var(--color-background);
+    color: var(--foreground);
+  }
+
+  /* Custom Scrollbar for premium feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-700);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-surface-800);
+  }
+}
