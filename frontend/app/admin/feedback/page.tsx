@@ -73,7 +73,10 @@ export default function FeedbackList() {
       const result = await fetchApi<PaginationResponse>(`/api/feedback?${query.toString()}`, {
         requireAuth: true,
       });
-      setData(result);
+      setData({
+        data: result.data || [],
+        ...result.pagination
+      });
     } catch (err) {
       console.error("Failed to fetch feedback", err);
     } finally {
