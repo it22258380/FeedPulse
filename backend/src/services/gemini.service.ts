@@ -20,11 +20,10 @@ const getClient = () => {
   if (!apiKey) throw new Error('GEMINI_API_KEY is not configured');//check if Gemini API key 
   return new GoogleGenerativeAI(apiKey);
 };
-// Default to a generally available flash model; allow override via env if needed
-const MODEL_ID = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 // Analyze feedback using Gemini AI
 export const analyzeFeedback = async (title: string, description: string): Promise<GeminiAnalysis> => {
-  const model = getClient().getGenerativeModel({ model: MODEL_ID });
+  
+  const model = getClient().getGenerativeModel({ model: 'gemini-1.5-flash-001' });
   const prompt = `Analyse this product feedback. Return ONLY valid JSON with these exact fields, no markdown, no explanation:
 {
   "category": "Bug | Feature Request | Improvement | Other",
@@ -62,7 +61,8 @@ Feedback Description: ${description}`;
 export const generateWeeklySummary = async (
   items: Array<{ title: string; description: string; ai_tags?: string[]; ai_sentiment?: string }>
 ): Promise<WeeklySummary> => {
-  const model = getClient().getGenerativeModel({ model: MODEL_ID });
+  // same model change as above
+  const model = getClient().getGenerativeModel({ model: 'gemini-1.5-flash-001' });
 
   if (items.length === 0) {
     return {
