@@ -5,7 +5,9 @@ import { sendError } from '../utils/response';
 export const validate = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    sendError(res, errors.array().map((e) => e.msg).join(', '), 400, 'Validation failed');
+    const messages = errors.array().map((e) => e.msg);
+    // Surface the first validation message in `message` for client-friendly feedback
+    sendError(res, messages.join(', '), 400, messages[0]);
     return;
   }
   next();
