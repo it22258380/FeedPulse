@@ -18,5 +18,7 @@ export const sendSuccess = <T>(
 };
 
 export const sendError = (res: Response, error: string, statusCode = 500, message?: string): void => {
-  res.status(statusCode).json({ success: false, error, message });
+  // Ensure message is always present for client expectations (and tests).
+  const responseMessage = message || error;
+  res.status(statusCode).json({ success: false, error, message: responseMessage });
 };

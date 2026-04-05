@@ -34,8 +34,17 @@ export const submitFeedback = async (req: Request, res: Response): Promise<void>
       }
     })();
   } catch (error: unknown) {
-    if (error instanceof Error && error.name === 'ValidationError') sendError(res, error.message, 400);
-    else sendError(res, 'Failed to submit feedback.', 500);
+    if (error instanceof Error && error.name === 'ValidationError') {
+      // Prefer the first field-level validation message for clearer client feedback
+      const validationErrors = (error as any).errors;
+      const firstMessage = validationErrors
+        ? (Object.values(validationErrors)[0] as { message?: string })?.message
+        : undefined;
+      const message = typeof firstMessage === 'string' ? firstMessage : error.message;
+      sendError(res, message, 400);
+    } else {
+      sendError(res, 'Failed to submit feedback.', 500);
+    }
   }
 };
 
