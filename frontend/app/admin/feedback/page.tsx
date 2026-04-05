@@ -11,6 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, Loader2, MessageSquareWarning } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Sidebar } from "@/components/admin/Sidebar";
 
 interface FeedbackItem {
   _id: string;

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Select } from "@/components/ui/Select";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { ArrowLeft, Trash2, Zap, Loader2, User, Mail, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -108,6 +108,12 @@ export default function FeedbackDetailView() {
 
   if (!data) return null;
 
+  const createdAtDate = data.createdAt ? parseISO(data.createdAt) : null;
+  const createdAtLabel =
+    createdAtDate && !isNaN(createdAtDate.getTime())
+      ? formatDistanceToNow(createdAtDate, { addSuffix: true })
+      : "Unknown time";
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
@@ -141,7 +147,7 @@ export default function FeedbackDetailView() {
             <CardHeader>
               <div className="flex flex-wrap gap-2 mb-3">
                 <Badge variant="outline">{data.category}</Badge>
-                <Badge variant="secondary">{formatDistanceToNow(new Date(data.createdAt), { addSuffix: true })}</Badge>
+                <Badge variant="secondary">{createdAtLabel}</Badge>
               </div>
               <CardTitle className="text-2xl">{data.title}</CardTitle>
             </CardHeader>

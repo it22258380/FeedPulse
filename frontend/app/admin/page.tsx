@@ -31,8 +31,8 @@ export default function AdminDashboard() {
           fetchApi<Stats>("/api/feedback/stats", { requireAuth: true }).catch(() => null),
           fetchApi<SummaryData>("/api/feedback/summary", { requireAuth: true }).catch(() => null),
         ]);
-        if (statsData) setStats(statsData);
-        if (summaryData?.summary) setSummary(summaryData.summary);
+        if (statsData?.data) setStats(statsData.data);
+        if (summaryData?.data) setSummary(summaryData.data.key_insight || summaryData.data.summary || "");
       } catch (err) {
         console.error("Failed to load dashboard data");
       } finally {

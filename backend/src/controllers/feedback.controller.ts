@@ -97,8 +97,10 @@ export const getAISummary = async (_req: Request, res: Response): Promise<void> 
     if (recent.length === 0) { sendSuccess(res, { message: 'No processed feedback in the last 7 days' }); return; }
     const summary = await generateWeeklySummary(recent.map(f => ({ title: f.title, description: f.description, ai_tags: f.ai_tags, ai_sentiment: f.ai_sentiment })));
     sendSuccess(res, summary, 'Weekly AI summary generated');
-  } catch {
-    sendError(res, 'Failed to generate AI summary', 500);
+  } catch (err) {
+    console.error('AI summary generation failed:', err);
+    const message = err instanceof Error ? err.message : 'Failed to generate AI summary';
+    sendError(res, message, 500);
   }
 };
 //get feedback by id for admin

@@ -27,11 +27,11 @@ export function useAuth() {
       }
 
       try {
-        const data = await fetchApi<{ message?: string; _id: string; email: string; role: string }>(
+        const data = await fetchApi<{ message?: string; data: { _id: string; email: string; role: string } }>(
           "/api/auth/profile",
           { requireAuth: true }
         );
-        setUser({ id: data._id, email: data.email, role: data.role });
+        setUser({ id: data.data._id, email: data.data.email, role: data.data.role });
         setUnauthorized(false);
       } catch (error) {
         const message = (error as Error).message || "";
